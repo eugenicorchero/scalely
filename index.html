@@ -14,10 +14,8 @@
             --accent-hover: #ff3b5c;
             --success: #00E676;
             --error: #FF1744;
-            --white-key: #FFFFFF;
-            --white-key-active: #E0E0E0;
-            --black-key: #121212;
-            --black-key-active: #333333;
+            --note-btn-bg: #2C2663;
+            --note-btn-active: #FF5B77;
         }
 
         * {
@@ -86,22 +84,22 @@
         .prompt-card {
             background-color: var(--bg-card);
             border-radius: 16px;
-            padding: 20px;
+            padding: 18px;
             text-align: center;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .prompt-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--text-muted);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .scale-title {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 800;
             color: var(--text-main);
         }
@@ -114,16 +112,16 @@
             display: flex;
             justify-content: center;
             gap: 8px;
-            margin-top: 12px;
+            margin-top: 10px;
         }
 
         .mode-btn {
             background: rgba(255, 255, 255, 0.1);
             border: none;
             color: var(--text-muted);
-            padding: 6px 12px;
+            padding: 5px 10px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
@@ -152,7 +150,7 @@
         }
 
         .note-slot {
-            width: 65px;
+            width: 58px;
             height: 50px;
             border-radius: 10px;
             background-color: rgba(255, 255, 255, 0.06);
@@ -162,7 +160,7 @@
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: transform 0.1s, background-color 0.2s;
             color: var(--text-main);
@@ -184,12 +182,6 @@
             background-color: rgba(255, 23, 68, 0.2);
             border-color: var(--error);
             color: var(--error);
-        }
-
-        .note-slot span.sub {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            font-weight: 400;
         }
 
         @keyframes popIn {
@@ -242,108 +234,51 @@
             display: none;
         }
 
-        /* Teclat de Piano */
-        .piano-wrapper {
+        /* Panell de notes plana (mateixa jerarquia, disseny responsive i tàctil optimitzat) */
+        .palette-wrapper {
             background-color: #111;
-            padding: 12px 8px 20px 8px;
+            padding: 14px 10px 20px 10px;
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
             box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
         }
 
-        .piano {
-            position: relative;
-            display: flex;
-            height: 180px;
-            max-width: 650px;
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            max-width: 600px;
             margin: 0 auto;
-            gap: 4px;
         }
 
-        .white-key {
-            flex: 1;
-            background-color: var(--white-key);
-            color: #222;
-            border-radius: 0 0 8px 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            padding-bottom: 12px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            box-shadow: 0 4px 0 #999;
-            transition: background-color 0.05s, transform 0.05s;
-            z-index: 1;
-        }
-
-        .white-key small {
-            font-size: 0.65rem;
-            color: #666;
-            margin-top: 2px;
-        }
-
-        .white-key:active, .white-key.pressed {
-            background-color: var(--white-key-active);
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #999;
-        }
-
-        .white-key.selected-key {
-            background-color: #ffd6de;
-            border-bottom: 4px solid var(--accent);
-        }
-
-        .black-key {
-            position: absolute;
-            width: 9%;
-            height: 60%;
-            background-color: var(--black-key);
+        .note-btn {
+            background-color: var(--note-btn-bg);
             color: var(--text-main);
-            border-radius: 0 0 6px 6px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            padding-bottom: 8px;
-            font-size: 0.7rem;
-            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 4px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-align: center;
             cursor: pointer;
-            z-index: 2;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.6), inset 0 -2px 2px rgba(255,255,255,0.2);
-            transition: background-color 0.05s, transform 0.05s;
+            transition: background-color 0.1s, transform 0.08s;
         }
 
-        .black-key small {
-            font-size: 0.55rem;
-            color: #aaa;
-            margin-top: 1px;
-        }
-
-        .black-key:active, .black-key.pressed {
-            background-color: var(--black-key-active);
-            transform: translateY(2px);
-        }
-
-        .black-key.selected-key {
+        .note-btn:active {
+            transform: scale(0.95);
             background-color: var(--accent);
-            color: white;
         }
 
-        .black-key.selected-key small {
-            color: rgba(255, 255, 255, 0.8);
+        .note-btn.selected {
+            background-color: var(--accent);
+            border-color: #ff8fa3;
+            box-shadow: 0 0 10px rgba(255, 91, 119, 0.4);
         }
 
-        /* Posicions de les tecles negres */
-        .bk-csharp { left: 9.3%; }
-        .bk-dsharp { left: 23.5%; }
-        .bk-fsharp { left: 52.0%; }
-        .bk-gsharp { left: 66.2%; }
-        .bk-asharp { left: 80.5%; }
-
-        @media (min-height: 750px) {
-            .piano { height: 210px; }
+        @media (min-width: 500px) {
+            .palette-grid {
+                grid-template-columns: repeat(12, 1fr);
+            }
         }
     </style>
 </head>
@@ -380,102 +315,107 @@
         </div>
     </main>
 
-    <div class="piano-wrapper">
-        <div class="piano" id="piano">
-            <!-- Tecles Blanques -->
-            <div class="white-key" data-note="Do" data-freq="261.63">Do</div>
-            <div class="white-key" data-note="Re" data-freq="293.66">Re</div>
-            <div class="white-key" data-note="Mi" data-freq="329.63">Mi</div>
-            <div class="white-key" data-note="Fa" data-freq="349.23">Fa</div>
-            <div class="white-key" data-note="Sol" data-freq="392.00">Sol</div>
-            <div class="white-key" data-note="La" data-freq="440.00">La</div>
-            <div class="white-key" data-note="Si" data-freq="493.88">Si</div>
-
-            <!-- Tecles Negres (Sostinguts i Bemolls neutres) -->
-            <div class="black-key bk-csharp" data-note="Do#" data-freq="277.18">Do#<small>Reb</small></div>
-            <div class="black-key bk-dsharp" data-note="Re#" data-freq="311.13">Re#<small>Mib</small></div>
-            <div class="black-key bk-fsharp" data-note="Fa#" data-freq="369.99">Fa#<small>Solb</small></div>
-            <div class="black-key bk-gsharp" data-note="Sol#" data-freq="415.30">Sol#<small>Lab</small></div>
-            <div class="black-key bk-asharp" data-note="La#" data-freq="466.16">La#<small>Sib</small></div>
+    <div class="palette-wrapper">
+        <div class="palette-grid" id="palette-grid">
+            <!-- Es generen per JS les 12 notes en igualtat de condicions -->
         </div>
     </div>
 
     <script>
-        // Relació d'equivalències per acceptar tant sostingut com bemoll al validar la resposta
-        const NOTE_EQUIVALENTS = {
-            "Do": ["Do"],
-            "Do#": ["Do#", "Reb"], "Reb": ["Do#", "Reb"],
-            "Re": ["Re"],
-            "Re#": ["Re#", "Mib"], "Mib": ["Re#", "Mib"],
-            "Mi": ["Mi"],
-            "Fa": ["Fa"],
-            "Fa#": ["Fa#", "Solb"], "Solb": ["Fa#", "Solb"],
-            "Sol": ["Sol"],
-            "Sol#": ["Sol#", "Lab"], "Lab": ["Sol#", "Lab"],
-            "La": ["La"],
-            "La#": ["La#", "Sib"], "Sib": ["La#", "Sib"],
-            "Si": ["Si"]
-        };
+        // Llista oficial neta d'escales netes (evitant tonalitats extremadament enharmòniques o amb dobles sostinguts)
+        const CLEAN_SCALES = [
+            // Majors netes
+            { root: "Do", type: "major", notes: ["Do", "Re", "Mi", "Fa", "Sol", "La", "Si"] },
+            { root: "Sol", type: "major", notes: ["Sol", "La", "Si", "Do", "Re", "Mi", "Fa#"] },
+            { root: "Re", type: "major", notes: ["Re", "Mi", "Fa#", "Sol", "La", "Si", "Do#"] },
+            { root: "La", type: "major", notes: ["La", "Si", "Do#", "Re", "Mi", "Fa#", "Sol#"] },
+            { root: "Mi", type: "major", notes: ["Mi", "Fa#", "Sol#", "La", "Si", "Do#", "Re#"] },
+            { root: "Si", type: "major", notes: ["Si", "Do#", "Re#", "Mi", "Fa#", "Sol#", "La#"] },
+            { root: "Fa", type: "major", notes: ["Fa", "Sol", "La", "Sib", "Do", "Re", "Mi"] },
+            { root: "Sib", type: "major", notes: ["Sib", "Do", "Re", "Mib", "Fa", "Sol", "La"] },
+            { root: "Mib", type: "major", notes: ["Mib", "Fa", "Sol", "Lab", "Sib", "Do", "Re"] },
+            
+            // Menors naturals netes
+            { root: "La", type: "minor", notes: ["La", "Si", "Do", "Re", "Mi", "Fa", "Sol"] },
+            { root: "Mi", type: "minor", notes: ["Mi", "Fa#", "Sol", "La", "Si", "Do", "Re"] },
+            { root: "Si", type: "minor", notes: ["Si", "Do#", "Re", "Mi", "Fa#", "Sol", "La"] },
+            { root: "Fa#", type: "minor", notes: ["Fa#", "Sol#", "La", "Si", "Do#", "Re", "Mi"] },
+            { root: "Do#", type: "minor", notes: ["Do#", "Re#", "Mi", "Fa#", "Sol#", "La", "Si"] },
+            { root: "Re", type: "minor", notes: ["Re", "Mi", "Fa", "Sol", "La", "Sib", "Do"] },
+            { root: "Sol", type: "minor", notes: ["Sol", "La", "Sib", "Do", "Re", "Mib", "Fa"] },
+            { root: "Do", type: "minor", notes: ["Do", "Re", "Mib", "Fa", "Sol", "Lab", "Sib"] }
+        ];
 
-        const CHROMATIC_BASE = ["Do", "Do#", "Re", "Re#", "Mi", "Fa", "Fa#", "Sol", "Sol#", "La", "La#", "Si"];
-        
-        // Noms per mostrar la tònica demanada
-        const DISPLAY_ROOTS = {
-            "Do": "Do", "Do#": "Do# / Reb", "Re": "Re", "Re#": "Re# / Mib",
-            "Mi": "Mi", "Fa": "Fa", "Fa#": "Fa# / Solb", "Sol": "Sol",
-            "Sol#": "Sol# / Lab", "La": "La", "La#": "La# / Sib", "Si": "Si"
-        };
+        // Totes les 12 notes disponibles en la mateixa jerarquia per a la selecció de l'usuari
+        const ALL_NOTES = ["Do", "Do#", "Reb", "Re", "Re#", "Mib", "Mi", "Fa", "Fa#", "Solb", "Sol", "Sol#", "Lab", "La", "La#", "Sib", "Si"];
+        // Nota: Agrupem o llistem les essencials de manera plana
+        const PALETTE_NOTES = ["Do", "Do#", "Reb", "Re", "Re#", "Mib", "Mi", "Fa", "Fa#", "Solb", "Sol", "Sol#", "Lab", "La", "La#", "Sib", "Si"];
 
-        const FORMULAS = {
-            major: [0, 2, 4, 5, 7, 9, 11],
-            minor: [0, 2, 3, 5, 7, 8, 10]
-        };
-
-        let currentScale = { root: "Do", type: "major", notes: [] };
-        let selectedNotes = []; // Emmagatzema les notes escollides
+        let currentScale = CLEAN_SCALES[0];
+        let selectedNotes = [];
         let filterMode = "all";
         let isAnswered = false;
         let stats = { streak: 0, score: 0, total: 0 };
 
-        let audioCtx = null;
-        function playNoteSound(freq) {
-            try {
-                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.4);
-            } catch (e) {}
+        // Generar la graella plana de botons de notes
+        function renderPalette() {
+            const grid = document.getElementById("palette-grid");
+            grid.innerHTML = "";
+            
+            PALETTE_NOTES.forEach(note => {
+                const btn = document.createElement("button");
+                btn.className = "note-btn";
+                btn.textContent = note;
+                
+                if (selectedNotes.includes(note)) {
+                    btn.classList.add("selected");
+                }
+
+                btn.onclick = () => handleNoteClick(note);
+                grid.appendChild(btn);
+            });
+        }
+
+        function handleNoteClick(note) {
+            if (isAnswered) return;
+
+            const existingIndex = selectedNotes.indexOf(note);
+            if (existingIndex !== -1) {
+                // Toggle: si ja estava seleccionada, l'esborrem
+                selectedNotes.splice(existingIndex, 1);
+            } else {
+                // Evitar duplicar exactament la mateixa nota o demanar més de 7
+                if (selectedNotes.length < 7) {
+                    selectedNotes.push(note);
+                }
+            }
+
+            renderSlots();
+            renderPalette();
         }
 
         function generateNewScale() {
             isAnswered = false;
             selectedNotes = [];
-            
-            let type = filterMode;
-            if (filterMode === "all") {
-                type = Math.random() < 0.5 ? "major" : "minor";
+
+            // Filtrar segons el mode seleccionat
+            let pool = CLEAN_SCALES;
+            if (filterMode === "major") {
+                pool = CLEAN_SCALES.filter(s => s.type === "major");
+            } else if (filterMode === "minor") {
+                pool = CLEAN_SCALES.filter(s => s.type === "minor");
             }
 
-            let rootIndex;
+            // Triar una escala aleatòria diferent de l'actual
+            let newObj;
             do {
-                rootIndex = Math.floor(Math.random() * CHROMATIC_BASE.length);
-            } while (CHROMATIC_BASE[rootIndex] === currentScale.root && type === currentScale.type);
+                newObj = pool[Math.floor(Math.random() * pool.length)];
+            } while (newObj === currentScale && pool.length > 1);
 
-            const root = CHROMATIC_BASE[rootIndex];
-            const notes = FORMULAS[type].map(interval => CHROMATIC_BASE[(rootIndex + interval) % 12]);
+            currentScale = newObj;
 
-            currentScale = { root, type, notes };
-
-            const typeText = type === "major" ? "Major" : "Menor";
-            document.getElementById("scale-prompt").innerHTML = `${DISPLAY_ROOTS[root]} <span>${typeText}</span>`;
+            const typeText = currentScale.type === "major" ? "Major" : "Menor";
+            document.getElementById("scale-prompt").innerHTML = `${currentScale.root} <span>${typeText}</span>`;
             document.getElementById("feedback-msg").textContent = "";
             
             document.getElementById("btn-check").style.display = "block";
@@ -483,7 +423,7 @@
             document.getElementById("btn-next").style.display = "none";
 
             renderSlots();
-            updatePianoHighlights();
+            renderPalette();
         }
 
         function renderSlots() {
@@ -499,19 +439,18 @@
                     slot.classList.add("filled");
 
                     if (isAnswered) {
-                        // Validació d'equivalències enharmòniques
-                        const accepted = NOTE_EQUIVALENTS[currentScale.notes[i]] || [currentScale.notes[i]];
-                        if (accepted.includes(selectedNotes[i])) {
+                        // Comprovació estricta amb la nota de l'escala escollida
+                        if (selectedNotes[i] === currentScale.notes[i]) {
                             slot.classList.add("correct");
                         } else {
                             slot.classList.add("wrong");
                         }
                     } else {
-                        // Clicar a sobre d'una nota ja posada l'esborra
+                        // Clicar a sobre d'una casella l'esborra directament
                         slot.onclick = () => {
                             selectedNotes.splice(i, 1);
                             renderSlots();
-                            updatePianoHighlights();
+                            renderPalette();
                         };
                     }
                 } else {
@@ -521,37 +460,6 @@
                 }
                 container.appendChild(slot);
             }
-        }
-
-        function updatePianoHighlights() {
-            document.querySelectorAll(".white-key, .black-key").forEach(key => {
-                const note = key.dataset.note;
-                if (selectedNotes.includes(note)) {
-                    key.classList.add("selected-key");
-                } else {
-                    key.classList.remove("selected-key");
-                }
-            });
-        }
-
-        function handleKeyPress(note, freq) {
-            playNoteSound(freq);
-            if (isAnswered) return;
-
-            // Evitar duplicats o permetre desmarcar si ja estava seleccionada
-            const existingIndex = selectedNotes.indexOf(note);
-            if (existingIndex !== -1) {
-                selectedNotes.splice(existingIndex, 1);
-            } else {
-                // Comprovar si ja s'havia seleccionat una nota base equivalent (ex: evitar posar Re i Re# o Re i Reb alhora si es vol restringir, 
-                // o simplement vigilar que no superi 7 notes i no repeteixi nota exacta)
-                if (selectedNotes.length < 7) {
-                    selectedNotes.push(note);
-                }
-            }
-
-            renderSlots();
-            updatePianoHighlights();
         }
 
         function checkAnswer() {
@@ -565,11 +473,7 @@
             isAnswered = true;
             stats.total++;
 
-            const isCorrect = selectedNotes.every((note, idx) => {
-                const accepted = NOTE_EQUIVALENTS[currentScale.notes[idx]] || [currentScale.notes[idx]];
-                return accepted.includes(note);
-            });
-
+            const isCorrect = selectedNotes.every((note, idx) => note === currentScale.notes[idx]);
             const msg = document.getElementById("feedback-msg");
 
             if (isCorrect) {
@@ -592,25 +496,15 @@
             document.getElementById("btn-next").style.display = "block";
 
             renderSlots();
+            renderPalette();
         }
-
-        document.querySelectorAll(".white-key, .black-key").forEach(key => {
-            const trigger = (e) => {
-                e.preventDefault();
-                key.classList.add("pressed");
-                setTimeout(() => key.classList.remove("pressed"), 120);
-                handleKeyPress(key.dataset.note, parseFloat(key.dataset.freq));
-            };
-            key.addEventListener("touchstart", trigger, { passive: false });
-            key.addEventListener("mousedown", trigger);
-        });
 
         document.getElementById("btn-clear").addEventListener("click", () => {
             if (isAnswered) return;
             selectedNotes = [];
             document.getElementById("feedback-msg").textContent = "";
             renderSlots();
-            updatePianoHighlights();
+            renderPalette();
         });
 
         document.getElementById("btn-check").addEventListener("click", checkAnswer);
@@ -625,6 +519,7 @@
             });
         });
 
+        // Inicialitzar
         generateNewScale();
     </script>
 </body>
