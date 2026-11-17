@@ -1,620 +1,309 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Scalely - Pràctica d'Escales</title>
-    <style>
-        :root {
-            --bg-main: #222222;
-            --bg-card: #1D1851;
-            --text-main: #FFFFFF;
-            --text-muted: #B0B0C0;
-            --accent: #FF5B77;
-            --accent-hover: #ff3b5c;
-            --success: #00E676;
-            --error: #FF1744;
-            --note-btn-bg: #2C2663;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            height: 100dvh;
-            overflow: hidden;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 20px;
-            background-color: rgba(0, 0, 0, 0.2);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .logo {
-            font-size: 1.25rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            color: var(--text-main);
-            cursor: pointer;
-        }
-
-        .logo span {
-            color: var(--accent);
-        }
-
-        .stats {
-            display: flex;
-            gap: 12px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .stat-badge {
-            background: var(--bg-card);
-            padding: 4px 10px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 14px 16px;
-            max-width: 650px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        .prompt-card {
-            background-color: var(--bg-card);
-            border-radius: 16px;
-            padding: 14px;
-            text-align: center;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .prompt-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-        }
-
-        .scale-title {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--text-main);
-        }
-
-        .scale-title span {
-            color: var(--accent);
-        }
-
-        .current-mode-indicator {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .current-mode-indicator span {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .selection-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin: auto 0;
-        }
-
-        .slots-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 6px;
-            min-height: 48px;
-            width: 100%;
-        }
-
-        .note-slot {
-            width: 48px;
-            height: 46px;
-            border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.06);
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: transform 0.1s, background-color 0.2s;
-            color: var(--text-main);
-        }
-
-        .note-slot.filled {
-            background-color: var(--bg-card);
-            border: 2px solid var(--accent);
-            animation: popIn 0.15s ease-out;
-        }
-
-        .note-slot.correct {
-            background-color: rgba(0, 230, 118, 0.2);
-            border-color: var(--success);
-            color: var(--success);
-        }
-
-        .note-slot.wrong {
-            background-color: rgba(255, 23, 68, 0.2);
-            border-color: var(--error);
-            color: var(--error);
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0.8); }
-            100% { transform: scale(1); }
-        }
-
-        .feedback-msg {
-            min-height: 22px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: opacity 0.2s, transform 0.1s;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-clear {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--text-main);
-            flex: 0.4;
-        }
-
-        .btn-check {
-            background-color: var(--accent);
-            color: var(--text-main);
-        }
-
-        .btn-next {
-            background-color: var(--success);
-            color: #111;
-            display: none;
-        }
-
-        /* Graella de 21 notes: 3 files exactes de 7 columnes */
-        .palette-wrapper {
-            background-color: #111;
-            padding: 12px 10px 10px 10px;
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .palette-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .note-btn {
-            background-color: var(--note-btn-bg);
-            color: var(--text-main);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 11px 2px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.1s, transform 0.08s;
-        }
-
-        .note-btn:active {
-            transform: scale(0.95);
-            background-color: var(--accent);
-        }
-
-        .note-btn.selected {
-            background-color: var(--accent);
-            border-color: #ff8fa3;
-        }
-
-        footer {
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            padding: 10px 0 4px 0;
-            background-color: #111;
-        }
-
-        footer span {
-            color: var(--text-main);
-            font-weight: 600;
-        }
-
-        /* Modal Inicial */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100dvh;
-            background-color: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(5px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            padding: 20px;
-        }
-
-        .modal-card {
-            background-color: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 28px 24px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-title {
-            font-size: 1.6rem;
-            font-weight: 800;
-            margin-bottom: 8px;
-        }
-
-        .modal-title span {
-            color: var(--accent);
-        }
-
-        .modal-desc {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-            line-height: 1.4;
-        }
-
-        .modal-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .modal-btn {
-            background-color: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: var(--text-main);
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .modal-btn:active {
-            transform: scale(0.98);
-        }
-
-        .modal-btn.primary {
-            background-color: var(--accent);
-            border-color: var(--accent);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scalely - Pràctica d'Escales</title>
+<style>
+:root{--bg-main:#222;--bg-card:#1D1851;--text-main:#fff;--text-muted:#B0B0C0;--accent:#FF5B77;--success:#00E676;--error:#FF1744;--note-btn-bg:#2C2663}
+*{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit;touch-action:manipulation}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg-main);color:var(--text-main);display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:rgba(0,0,0,.2);border-bottom:1px solid rgba(255,255,255,.08)}
+.logo{font-size:1.25rem;font-weight:800;letter-spacing:.5px;cursor:pointer}
+.logo span,.scale-title span{color:var(--accent)}
+.stats{display:flex;gap:12px;font-size:.85rem;font-weight:600}
+.stat-badge{background:var(--bg-card);padding:4px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.1)}
+main{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:14px 16px;max-width:650px;width:100%;margin:0 auto;min-height:0}
+.prompt-card{background:var(--bg-card);border-radius:16px;padding:14px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08)}
+.prompt-label{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:4px}
+.scale-title{font-size:1.6rem;font-weight:800}
+.current-mode-indicator{font-size:.75rem;color:var(--text-muted);margin-top:6px}
+.current-mode-indicator>span{color:var(--accent);font-weight:600}
+.link-btn{background:none;border:none;color:var(--accent);font-size:inherit;cursor:pointer}
+.selection-area{display:flex;flex-direction:column;align-items:center;gap:10px;margin:auto 0;width:100%}
+.slots-container{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;width:100%;max-width:420px}
+.note-slot{height:46px;border-radius:10px;background:rgba(255,255,255,.06);border:2px dashed rgba(255,255,255,.2);font-weight:700;font-size:.85rem;color:var(--text-main);padding:0;cursor:pointer;transition:transform .1s,background-color .2s}
+.note-slot:disabled{cursor:default;color:rgba(255,255,255,.25);font-size:.75rem}
+.note-slot.filled{background:var(--bg-card);border:2px solid var(--accent);animation:popIn .15s ease-out}
+.note-slot.correct{background:rgba(0,230,118,.2);border-color:var(--success);color:var(--success)}
+.note-slot.wrong{background:rgba(255,23,68,.2);border-color:var(--error);color:var(--error)}
+@keyframes popIn{0%{transform:scale(.8)}100%{transform:scale(1)}}
+.feedback-msg{min-height:22px;font-size:.9rem;font-weight:600;text-align:center}
+.actions{display:flex;gap:10px;width:100%}
+.btn{flex:1;padding:12px;border:none;border-radius:12px;font-size:.95rem;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s}
+.btn:active{transform:scale(.98)}
+.btn-clear{background:rgba(255,255,255,.1);color:var(--text-main);flex:.4}
+.btn-check{background:var(--accent);color:var(--text-main)}
+.btn-next{background:var(--success);color:#111;display:none}
+.palette-wrapper{background:#111;padding:12px 10px 10px;border-radius:20px 20px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.4)}
+.palette-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;max-width:600px;margin:0 auto}
+.note-btn{background:var(--note-btn-bg);color:var(--text-main);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 2px;font-size:.85rem;font-weight:700;cursor:pointer;transition:background-color .1s,transform .08s}
+.note-btn:active{transform:scale(.95);background:var(--accent)}
+.note-btn.selected{background:var(--accent);border-color:#ff8fa3}
+footer{text-align:center;font-size:.7rem;color:var(--text-muted);padding:10px 0 4px}
+footer span{color:var(--text-main);font-weight:600}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(5px);display:flex;justify-content:center;align-items:center;z-index:100;padding:20px}
+.modal-card{background:var(--bg-card);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:28px 24px;max-width:400px;width:100%;text-align:center;box-shadow:0 12px 36px rgba(0,0,0,.5)}
+.modal-title{font-size:1.6rem;font-weight:800;margin-bottom:8px}
+.modal-title span{color:var(--accent)}
+.modal-desc{font-size:.9rem;color:var(--text-muted);margin-bottom:24px;line-height:1.4}
+.modal-options{display:flex;flex-direction:column;gap:10px}
+.modal-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:var(--text-main);padding:14px;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer}
+.modal-btn:active{transform:scale(.98)}
+.modal-btn.primary{background:var(--accent);border-color:var(--accent)}
+</style>
 </head>
 <body>
 
-    <div class="modal-overlay" id="modal-overlay">
-        <div class="modal-card">
-            <div class="modal-title">Scale<span>ly</span></div>
-            <div class="modal-desc">Tria quina modalitat d'escales vols practicar avui:</div>
-            <div class="modal-options">
-                <button class="modal-btn primary" onclick="startGame('all')">🌟 Totes (Barreja)</button>
-                <button class="modal-btn" onclick="startGame('major')">🎹 Només Majors</button>
-                <button class="modal-btn" onclick="startGame('minor')">🎶 Només Menors</button>
-            </div>
-        </div>
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-card">
+    <div class="modal-title" id="modal-title">Scale<span>ly</span></div>
+    <div class="modal-desc">Tria quina modalitat d'escales vols practicar avui:</div>
+    <div class="modal-options">
+      <button class="modal-btn primary" onclick="startGame('all')">🌟 Totes (Barreja)</button>
+      <button class="modal-btn" onclick="startGame('major')">🎹 Només Majors</button>
+      <button class="modal-btn" onclick="startGame('minor')">🎶 Només Menors naturals</button>
     </div>
+  </div>
+</div>
 
-    <header>
-        <div class="logo" onclick="openModal()">Scale<span>ly</span></div>
-        <div class="stats">
-            <div class="stat-badge">🔥 <span id="streak">0</span></div>
-            <div class="stat-badge">✅ <span id="score">0</span>/<span id="total">0</span></div>
-        </div>
-    </header>
+<header>
+  <div class="logo" onclick="openModal()">Scale<span>ly</span></div>
+  <div class="stats">
+    <div class="stat-badge">🔥 <span id="streak">0</span></div>
+    <div class="stat-badge">✅ <span id="score">0</span>/<span id="total">0</span></div>
+  </div>
+</header>
 
-    <main>
-        <div class="prompt-card">
-            <div class="prompt-label">Construeix l'escala de</div>
-            <div class="scale-title" id="scale-prompt">Do <span>Major</span></div>
-            <div class="current-mode-indicator">Mode: <span id="mode-text">Totes</span> (<a href="#" onclick="openModal(); return false;" style="color:var(--accent); text-decoration:none;">canviar</a>)</div>
-        </div>
+<main>
+  <div class="prompt-card">
+    <div class="prompt-label">Construeix l'escala de</div>
+    <div class="scale-title" id="scale-prompt">Do <span>Major</span></div>
+    <div class="current-mode-indicator">Mode: <span id="mode-text">Totes (Barreja)</span> (<button class="link-btn" onclick="openModal()">canviar</button>)</div>
+  </div>
 
-        <div class="selection-area">
-            <div class="slots-container" id="slots-container"></div>
-            <div class="feedback-msg" id="feedback-msg"></div>
-        </div>
+  <div class="selection-area">
+    <div class="slots-container" id="slots-container"></div>
+    <div class="feedback-msg" id="feedback-msg" aria-live="polite"></div>
+  </div>
 
-        <div class="actions">
-            <button class="btn btn-clear" id="btn-clear">Esborrar</button>
-            <button class="btn btn-check" id="btn-check">Comprovar</button>
-            <button class="btn btn-next" id="btn-next">Següent Escala →</button>
-        </div>
-    </main>
+  <div class="actions">
+    <button class="btn btn-clear" id="btn-clear">Esborrar</button>
+    <button class="btn btn-check" id="btn-check">Comprovar</button>
+    <button class="btn btn-next" id="btn-next">Següent Escala →</button>
+  </div>
+</main>
 
-    <div class="palette-wrapper">
-        <div class="palette-grid" id="palette-grid"></div>
-        <footer>Creat per <span>Eugeni Corchero</span></footer>
-    </div>
+<div class="palette-wrapper">
+  <div class="palette-grid" id="palette-grid"></div>
+  <footer>Creat per <span>Eugeni Corchero</span></footer>
+</div>
 
-    <script>
-        // Totes les 15 tonalitats majors i les 15 menors naturals (fins a 7 sostinguts i 7 bemolls)
-        const CLEAN_SCALES = [
-            // MAJORS (0 alteracions + 7 sostinguts + 7 bemolls)
-            { root: "Do", type: "major", notes: ["Do", "Re", "Mi", "Fa", "Sol", "La", "Si"] },
-            { root: "Sol", type: "major", notes: ["Sol", "La", "Si", "Do", "Re", "Mi", "Fa#"] },
-            { root: "Re", type: "major", notes: ["Re", "Mi", "Fa#", "Sol", "La", "Si", "Do#"] },
-            { root: "La", type: "major", notes: ["La", "Si", "Do#", "Re", "Mi", "Fa#", "Sol#"] },
-            { root: "Mi", type: "major", notes: ["Mi", "Fa#", "Sol#", "La", "Si", "Do#", "Re#"] },
-            { root: "Si", type: "major", notes: ["Si", "Do#", "Re#", "Mi", "Fa#", "Sol#", "La#"] },
-            { root: "Fa#", type: "major", notes: ["Fa#", "Sol#", "La#", "Si", "Do#", "Re#", "Mi#"] },
-            { root: "Do#", type: "major", notes: ["Do#", "Re#", "Mi#", "Fa#", "Sol#", "La#", "Si#"] },
-            { root: "Fa", type: "major", notes: ["Fa", "Sol", "La", "Sib", "Do", "Re", "Mi"] },
-            { root: "Sib", type: "major", notes: ["Sib", "Do", "Re", "Mib", "Fa", "Sol", "La"] },
-            { root: "Mib", type: "major", notes: ["Mib", "Fa", "Sol", "Lab", "Sib", "Do", "Re"] },
-            { root: "Lab", type: "major", notes: ["Lab", "Sib", "Do", "Reb", "Mib", "Fa", "Sol"] },
-            { root: "Reb", type: "major", notes: ["Reb", "Mib", "Fa", "Solb", "Lab", "Sib", "Do"] },
-            { root: "Solb", type: "major", notes: ["Solb", "Lab", "Sib", "Dob", "Reb", "Mib", "Fa"] },
-            { root: "Dob", type: "major", notes: ["Dob", "Reb", "Mib", "Fab", "Solb", "Lab", "Sib"] },
+<script>
+// 15 tonalitats majors i 15 menors naturals (fins a 7 sostinguts i 7 bemolls)
+const CLEAN_SCALES = [
+  { root: "Do",   type: "major", notes: ["Do","Re","Mi","Fa","Sol","La","Si"] },
+  { root: "Sol",  type: "major", notes: ["Sol","La","Si","Do","Re","Mi","Fa#"] },
+  { root: "Re",   type: "major", notes: ["Re","Mi","Fa#","Sol","La","Si","Do#"] },
+  { root: "La",   type: "major", notes: ["La","Si","Do#","Re","Mi","Fa#","Sol#"] },
+  { root: "Mi",   type: "major", notes: ["Mi","Fa#","Sol#","La","Si","Do#","Re#"] },
+  { root: "Si",   type: "major", notes: ["Si","Do#","Re#","Mi","Fa#","Sol#","La#"] },
+  { root: "Fa#",  type: "major", notes: ["Fa#","Sol#","La#","Si","Do#","Re#","Mi#"] },
+  { root: "Do#",  type: "major", notes: ["Do#","Re#","Mi#","Fa#","Sol#","La#","Si#"] },
+  { root: "Fa",   type: "major", notes: ["Fa","Sol","La","Sib","Do","Re","Mi"] },
+  { root: "Sib",  type: "major", notes: ["Sib","Do","Re","Mib","Fa","Sol","La"] },
+  { root: "Mib",  type: "major", notes: ["Mib","Fa","Sol","Lab","Sib","Do","Re"] },
+  { root: "Lab",  type: "major", notes: ["Lab","Sib","Do","Reb","Mib","Fa","Sol"] },
+  { root: "Reb",  type: "major", notes: ["Reb","Mib","Fa","Solb","Lab","Sib","Do"] },
+  { root: "Solb", type: "major", notes: ["Solb","Lab","Sib","Dob","Reb","Mib","Fa"] },
+  { root: "Dob",  type: "major", notes: ["Dob","Reb","Mib","Fab","Solb","Lab","Sib"] },
 
-            // MENORS NATURALS (0 alteracions + 7 sostinguts + 7 bemolls)
-            { root: "La", type: "minor", notes: ["La", "Si", "Do", "Re", "Mi", "Fa", "Sol"] },
-            { root: "Mi", type: "minor", notes: ["Mi", "Fa#", "Sol", "La", "Si", "Do", "Re"] },
-            { root: "Si", type: "minor", notes: ["Si", "Do#", "Re", "Mi", "Fa#", "Sol", "La"] },
-            { root: "Fa#", type: "minor", notes: ["Fa#", "Sol#", "La", "Si", "Do#", "Re", "Mi"] },
-            { root: "Do#", type: "minor", notes: ["Do#", "Re#", "Mi", "Fa#", "Sol#", "La", "Si"] },
-            { root: "Sol#", type: "minor", notes: ["Sol#", "La#", "Si", "Do#", "Re#", "Mi", "Fa#"] },
-            { root: "Re#", type: "minor", notes: ["Re#", "Mi#", "Fa#", "Sol#", "La#", "Si", "Do#"] },
-            { root: "La#", type: "minor", notes: ["La#", "Si#", "Do#", "Re#", "Mi#", "Fa#", "Sol#"] },
-            { root: "Re", type: "minor", notes: ["Re", "Mi", "Fa", "Sol", "La", "Sib", "Do"] },
-            { root: "Sol", type: "minor", notes: ["Sol", "La", "Sib", "Do", "Re", "Mib", "Fa"] },
-            { root: "Do", type: "minor", notes: ["Do", "Re", "Mib", "Fa", "Sol", "Lab", "Sib"] },
-            { root: "Fa", type: "minor", notes: ["Fa", "Sol", "Lab", "Sib", "Do", "Reb", "Mib"] },
-            { root: "Sib", type: "minor", notes: ["Sib", "Do", "Reb", "Mib", "Fa", "Solb", "Lab"] },
-            { root: "Mib", type: "minor", notes: ["Mib", "Fa", "Solb", "Lab", "Sib", "Dob", "Reb"] },
-            { root: "Lab", type: "minor", notes: ["Lab", "Sib", "Dob", "Reb", "Mib", "Fab", "Solb"] }
-        ];
+  { root: "La",   type: "minor", notes: ["La","Si","Do","Re","Mi","Fa","Sol"] },
+  { root: "Mi",   type: "minor", notes: ["Mi","Fa#","Sol","La","Si","Do","Re"] },
+  { root: "Si",   type: "minor", notes: ["Si","Do#","Re","Mi","Fa#","Sol","La"] },
+  { root: "Fa#",  type: "minor", notes: ["Fa#","Sol#","La","Si","Do#","Re","Mi"] },
+  { root: "Do#",  type: "minor", notes: ["Do#","Re#","Mi","Fa#","Sol#","La","Si"] },
+  { root: "Sol#", type: "minor", notes: ["Sol#","La#","Si","Do#","Re#","Mi","Fa#"] },
+  { root: "Re#",  type: "minor", notes: ["Re#","Mi#","Fa#","Sol#","La#","Si","Do#"] },
+  { root: "La#",  type: "minor", notes: ["La#","Si#","Do#","Re#","Mi#","Fa#","Sol#"] },
+  { root: "Re",   type: "minor", notes: ["Re","Mi","Fa","Sol","La","Sib","Do"] },
+  { root: "Sol",  type: "minor", notes: ["Sol","La","Sib","Do","Re","Mib","Fa"] },
+  { root: "Do",   type: "minor", notes: ["Do","Re","Mib","Fa","Sol","Lab","Sib"] },
+  { root: "Fa",   type: "minor", notes: ["Fa","Sol","Lab","Sib","Do","Reb","Mib"] },
+  { root: "Sib",  type: "minor", notes: ["Sib","Do","Reb","Mib","Fa","Solb","Lab"] },
+  { root: "Mib",  type: "minor", notes: ["Mib","Fa","Solb","Lab","Sib","Dob","Reb"] },
+  { root: "Lab",  type: "minor", notes: ["Lab","Sib","Dob","Reb","Mib","Fab","Solb"] }
+];
 
-        // 21 notes exactes (3 files de 7 columnes: Naturals / Sostinguts / Bemolls)
-        const PALETTE_NOTES = [
-            "Do",  "Re",  "Mi",  "Fa",  "Sol",  "La",  "Si",
-            "Do#", "Re#", "Mi#", "Fa#", "Sol#", "La#", "Si#",
-            "Dob", "Reb", "Mib", "Fab", "Solb", "Lab", "Sib"
-        ];
+// 21 notes: naturals / sostinguts / bemolls
+const PALETTE_NOTES = [
+  "Do","Re","Mi","Fa","Sol","La","Si",
+  "Do#","Re#","Mi#","Fa#","Sol#","La#","Si#",
+  "Dob","Reb","Mib","Fab","Solb","Lab","Sib"
+];
 
-        let currentScale = CLEAN_SCALES[0];
-        let selectedNotes = [];
-        let currentMode = "all";
-        let isAnswered = false;
-        let stats = { streak: 0, score: 0, total: 0 };
+const baseOf = n => n.replace(/[#b]/g, "");
+const $ = id => document.getElementById(id);
 
-        function openModal() {
-            document.getElementById("modal-overlay").style.display = "flex";
-        }
+let currentScale = CLEAN_SCALES[0];
+let selectedNotes = [];
+let currentMode = "all";
+let isAnswered = false;
+let stats = { streak: 0, score: 0, total: 0 };
 
-        function startGame(mode) {
-            currentMode = mode;
-            const modeNames = { "all": "Totes (Barreja)", "major": "Només Majors", "minor": "Només Menors" };
-            document.getElementById("mode-text").textContent = modeNames[mode];
-            document.getElementById("modal-overlay").style.display = "none";
-            generateNewScale();
-        }
+function setMsg(text, color) {
+  const m = $("feedback-msg");
+  m.style.color = color || "";
+  m.textContent = text;
+}
 
-        function renderPalette() {
-            const grid = document.getElementById("palette-grid");
-            grid.innerHTML = "";
-            
-            PALETTE_NOTES.forEach(note => {
-                const btn = document.createElement("button");
-                btn.className = "note-btn";
-                btn.textContent = note;
-                
-                if (selectedNotes.includes(note)) {
-                    btn.classList.add("selected");
-                }
+function openModal() { $("modal-overlay").style.display = "flex"; }
 
-                btn.onclick = () => handleNoteClick(note);
-                grid.appendChild(btn);
-            });
-        }
+function startGame(mode) {
+  currentMode = mode;
+  const names = { all: "Totes (Barreja)", major: "Només Majors", minor: "Només Menors naturals" };
+  $("mode-text").textContent = names[mode];
+  $("modal-overlay").style.display = "none";
+  generateNewScale();
+}
 
-        function handleNoteClick(note) {
-            if (isAnswered) return;
+function renderPalette() {
+  const grid = $("palette-grid");
+  grid.innerHTML = "";
+  PALETTE_NOTES.forEach(note => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "note-btn" + (selectedNotes.includes(note) ? " selected" : "");
+    btn.textContent = note;
+    btn.onclick = () => handleNoteClick(note);
+    grid.appendChild(btn);
+  });
+}
 
-            const existingIndex = selectedNotes.indexOf(note);
-            if (existingIndex !== -1) {
-                selectedNotes.splice(existingIndex, 1);
-            } else if (selectedNotes.length < 7) {
-                // Evita posar dues alteracions de la mateixa nota base (ex: Re i Re#)
-                const baseNote = note.replace(/[#b]/g, "");
-                const alreadyHasBase = selectedNotes.some(n => n.replace(/[#b]/g, "") === baseNote);
-                
-                if (alreadyHasBase) {
-                    const msg = document.getElementById("feedback-msg");
-                    msg.style.color = "#FFD54F";
-                    msg.textContent = `Ja has posat una nota ${baseNote}.`;
-                    return;
-                }
-                
-                document.getElementById("feedback-msg").textContent = "";
-                selectedNotes.push(note);
-            }
+function handleNoteClick(note) {
+  if (isAnswered) return;
 
-            renderSlots();
-            renderPalette();
-        }
+  const idx = selectedNotes.indexOf(note);
+  if (idx !== -1) {                       // clic sobre una nota ja posada: la treu
+    selectedNotes.splice(idx, 1);
+    setMsg("");
+  } else {
+    const sameLetter = selectedNotes.findIndex(n => baseOf(n) === baseOf(note));
+    if (sameLetter !== -1) {              // mateixa lletra: substitueix l'alteració al mateix lloc
+      selectedNotes[sameLetter] = note;
+      setMsg("");
+    } else if (selectedNotes.length < 7) {
+      selectedNotes.push(note);
+      setMsg("");
+    } else {
+      setMsg("Ja tens 7 notes. Treu-ne una o prem Comprova.", "#FFD54F");
+      return;
+    }
+  }
+  renderSlots();
+  renderPalette();
+}
 
-        function generateNewScale() {
-            isAnswered = false;
-            selectedNotes = [];
+function generateNewScale() {
+  isAnswered = false;
+  selectedNotes = [];
 
-            let pool = CLEAN_SCALES;
-            if (currentMode === "major") {
-                pool = CLEAN_SCALES.filter(s => s.type === "major");
-            } else if (currentMode === "minor") {
-                pool = CLEAN_SCALES.filter(s => s.type === "minor");
-            }
+  const pool = currentMode === "all" ? CLEAN_SCALES : CLEAN_SCALES.filter(s => s.type === currentMode);
+  let next;
+  do { next = pool[Math.floor(Math.random() * pool.length)]; }
+  while (next === currentScale && pool.length > 1);
+  currentScale = next;
 
-            let newObj;
-            do {
-                newObj = pool[Math.floor(Math.random() * pool.length)];
-            } while (newObj === currentScale && pool.length > 1);
+  const typeText = currentScale.type === "major" ? "Major" : "Menor natural";
+  $("scale-prompt").innerHTML = `${currentScale.root} <span>${typeText}</span>`;
+  setMsg("");
 
-            currentScale = newObj;
+  $("btn-check").style.display = "block";
+  $("btn-clear").style.display = "block";
+  $("btn-next").style.display = "none";
 
-            const typeText = currentScale.type === "major" ? "Major" : "Menor";
-            document.getElementById("scale-prompt").innerHTML = `${currentScale.root} <span>${typeText}</span>`;
-            document.getElementById("feedback-msg").textContent = "";
-            
-            document.getElementById("btn-check").style.display = "block";
-            document.getElementById("btn-clear").style.display = "block";
-            document.getElementById("btn-next").style.display = "none";
+  renderSlots();
+  renderPalette();
+}
 
-            renderSlots();
-            renderPalette();
-        }
+function renderSlots() {
+  const container = $("slots-container");
+  container.innerHTML = "";
 
-        function renderSlots() {
-            const container = document.getElementById("slots-container");
-            container.innerHTML = "";
+  for (let i = 0; i < 7; i++) {
+    const slot = document.createElement("button");
+    slot.type = "button";
+    slot.className = "note-slot";
 
-            for (let i = 0; i < 7; i++) {
-                const slot = document.createElement("div");
-                slot.className = "note-slot";
-                
-                if (selectedNotes[i]) {
-                    slot.textContent = selectedNotes[i];
-                    slot.classList.add("filled");
+    if (selectedNotes[i]) {
+      slot.textContent = selectedNotes[i];
+      slot.classList.add("filled");
+      if (isAnswered) {
+        slot.disabled = true;
+        slot.classList.add(selectedNotes[i] === currentScale.notes[i] ? "correct" : "wrong");
+      } else {
+        slot.setAttribute("aria-label", `Treure ${selectedNotes[i]}`);
+        slot.onclick = () => {
+          selectedNotes.splice(i, 1);
+          setMsg("");
+          renderSlots();
+          renderPalette();
+        };
+      }
+    } else {
+      slot.textContent = i + 1;
+      slot.disabled = true;
+    }
+    container.appendChild(slot);
+  }
+}
 
-                    if (isAnswered) {
-                        if (selectedNotes[i] === currentScale.notes[i]) {
-                            slot.classList.add("correct");
-                        } else {
-                            slot.classList.add("wrong");
-                        }
-                    } else {
-                        slot.onclick = () => {
-                            selectedNotes.splice(i, 1);
-                            document.getElementById("feedback-msg").textContent = "";
-                            renderSlots();
-                            renderPalette();
-                        };
-                    }
-                } else {
-                    slot.textContent = i + 1;
-                    slot.style.color = "rgba(255,255,255,0.2)";
-                    slot.style.fontSize = "0.75rem";
-                }
-                container.appendChild(slot);
-            }
-        }
+function checkAnswer() {
+  if (isAnswered) return;
+  if (selectedNotes.length < 7) {
+    setMsg(`Falten ${7 - selectedNotes.length} notes per completar l'escala.`, "#FFD54F");
+    return;
+  }
 
-        function checkAnswer() {
-            if (selectedNotes.length < 7) {
-                const msg = document.getElementById("feedback-msg");
-                msg.style.color = "#FFD54F";
-                msg.textContent = `Falten ${7 - selectedNotes.length} notes per completar l'escala.`;
-                return;
-            }
+  isAnswered = true;
+  stats.total++;
 
-            isAnswered = true;
-            stats.total++;
+  const isCorrect = selectedNotes.every((n, i) => n === currentScale.notes[i]);
+  if (isCorrect) {
+    stats.score++;
+    stats.streak++;
+    setMsg("Molt bé! Escala correcta 🎉", "var(--success)");
+  } else {
+    stats.streak = 0;
+    setMsg(`Solució correcta: ${currentScale.notes.join(" - ")}`, "var(--error)");
+  }
 
-            const isCorrect = selectedNotes.every((note, idx) => note === currentScale.notes[idx]);
-            const msg = document.getElementById("feedback-msg");
+  $("streak").textContent = stats.streak;
+  $("score").textContent = stats.score;
+  $("total").textContent = stats.total;
 
-            if (isCorrect) {
-                stats.score++;
-                stats.streak++;
-                msg.style.color = "var(--success)";
-                msg.textContent = "Molt bé! Escala correcta 🎉";
-            } else {
-                stats.streak = 0;
-                msg.style.color = "var(--error)";
-                msg.textContent = `Solució correcta: ${currentScale.notes.join(" - ")}`;
-            }
+  $("btn-check").style.display = "none";
+  $("btn-clear").style.display = "none";
+  $("btn-next").style.display = "block";
 
-            document.getElementById("streak").textContent = stats.streak;
-            document.getElementById("score").textContent = stats.score;
-            document.getElementById("total").textContent = stats.total;
+  renderSlots();
+  renderPalette();
+}
 
-            document.getElementById("btn-check").style.display = "none";
-            document.getElementById("btn-clear").style.display = "none";
-            document.getElementById("btn-next").style.display = "block";
+$("btn-clear").addEventListener("click", () => {
+  if (isAnswered) return;
+  selectedNotes = [];
+  setMsg("");
+  renderSlots();
+  renderPalette();
+});
+$("btn-check").addEventListener("click", checkAnswer);
+$("btn-next").addEventListener("click", generateNewScale);
 
-            renderSlots();
-            renderPalette();
-        }
-
-        document.getElementById("btn-clear").addEventListener("click", () => {
-            if (isAnswered) return;
-            selectedNotes = [];
-            document.getElementById("feedback-msg").textContent = "";
-            renderSlots();
-            renderPalette();
-        });
-
-        document.getElementById("btn-check").addEventListener("click", checkAnswer);
-        document.getElementById("btn-next").addEventListener("click", generateNewScale);
-    </script>
+// Pintat inicial (darrere el modal)
+renderSlots();
+renderPalette();
+</script>
 </body>
 </html>
