@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Scalely - Pràctica d'Escales</title>
+    <style>
+        :root {
+            --bg-main: #222222;
+            --bg-card: #1D1851;
+            --text-main: #FFFFFF;
+            --text-muted: #B0B0C0;
+            --accent: #FF5B77;
+            --accent-hover: #ff3b5c;
+            --success: #00E676;
+            --error: #FF1744;
+            --white-key: #FFFFFF;
+            --white-key-active: #E0E0E0;
+            --black-key: #121212;
+            --black-key-active: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100dvh;
+            overflow: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: var(--text-main);
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .stat-badge {
+            background: var(--bg-card);
+            padding: 4px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 16px;
+            max-width: 650px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .prompt-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .prompt-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .scale-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .scale-title span {
+            color: var(--accent);
+        }
+
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .mode-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: var(--text-main);
+        }
+
+        .selection-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin: auto 0;
+        }
+
+        .slots-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            min-height: 52px;
+            width: 100%;
+        }
+
+        .note-slot {
+            width: 65px;
+            height: 50px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.06);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+            color: var(--text-main);
+        }
+
+        .note-slot.filled {
+            background-color: var(--bg-card);
+            border: 2px solid var(--accent);
+            animation: popIn 0.15s ease-out;
+        }
+
+        .note-slot.correct {
+            background-color: rgba(0, 230, 118, 0.2);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .note-slot.wrong {
+            background-color: rgba(255, 23, 68, 0.2);
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .note-slot span.sub {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); }
+            100% { transform: scale(1); }
+        }
+
+        .feedback-msg {
+            min-height: 24px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-clear {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            flex: 0.4;
+        }
+
+        .btn-check {
+            background-color: var(--accent);
+            color: var(--text-main);
+        }
+
+        .btn-next {
+            background-color: var(--success);
+            color: #111;
+            display: none;
+        }
+
+        /* Teclat de Piano */
+        .piano-wrapper {
+            background-color: #111;
+            padding: 12px 8px 20px 8px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .piano {
+            position: relative;
+            display: flex;
+            height: 180px;
+            max-width: 650px;
+            margin: 0 auto;
+            gap: 4px;
+        }
+
+        .white-key {
+            flex: 1;
+            background-color: var(--white-key);
+            color: #222;
+            border-radius: 0 0 8px 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 12px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #999;
+            transition: background-color 0.05s, transform 0.05s;
+            z-index: 1;
+        }
+
+        .white-key small {
+            font-size: 0.65rem;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .white-key:active, .white-key.pressed {
+            background-color: var(--white-key-active);
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #999;
+        }
+
+        .white-key.selected-key {
+            background-color: #ffd6de;
+            border-bottom: 4px solid var(--accent);
+        }
+
+        .black-key {
+            position: absolute;
+            width: 9%;
+            height: 60%;
+            background-color: var(--black-key);
+            color: var(--text-main);
+            border-radius: 0 0 6px 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 2;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.6), inset 0 -2px 2px rgba(255,255,255,0.2);
+            transition: background-color 0.05s, transform 0.05s;
+        }
+
+        .black-key small {
+            font-size: 0.55rem;
+            color: #aaa;
+            margin-top: 1px;
+        }
+
+        .black-key:active, .black-key.pressed {
+            background-color: var(--black-key-active);
+            transform: translateY(2px);
+        }
+
+        .black-key.selected-key {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .black-key.selected-key small {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Posicions de les tecles negres */
+        .bk-csharp { left: 9.3%; }
+        .bk-dsharp { left: 23.5%; }
+        .bk-fsharp { left: 52.0%; }
+        .bk-gsharp { left: 66.2%; }
+        .bk-asharp { left: 80.5%; }
+
+        @media (min-height: 750px) {
+            .piano { height: 210px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Scale<span>ly</span></div>
+        <div class="stats">
+            <div class="stat-badge">🔥 <span id="streak">0</span></div>
+            <div class="stat-badge">✅ <span id="score">0</span>/<span id="total">0</span></div>
+        </div>
+    </header>
+
+    <main>
+        <div class="prompt-card">
+            <div class="prompt-label">Construeix l'escala de</div>
+            <div class="scale-title" id="scale-prompt">Do <span>Major</span></div>
+            <div class="mode-selector">
+                <button class="mode-btn active" data-mode="all">Totes</button>
+                <button class="mode-btn" data-mode="major">Només Majors</button>
+                <button class="mode-btn" data-mode="minor">Només Menors</button>
+            </div>
+        </div>
+
+        <div class="selection-area">
+            <div class="slots-container" id="slots-container"></div>
+            <div class="feedback-msg" id="feedback-msg"></div>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-clear" id="btn-clear">Esborrar</button>
+            <button class="btn btn-check" id="btn-check">Comprovar</button>
+            <button class="btn btn-next" id="btn-next">Següent Escala →</button>
+        </div>
+    </main>
+
+    <div class="piano-wrapper">
+        <div class="piano" id="piano">
+            <!-- Tecles Blanques -->
+            <div class="white-key" data-note="Do" data-freq="261.63">Do</div>
+            <div class="white-key" data-note="Re" data-freq="293.66">Re</div>
+            <div class="white-key" data-note="Mi" data-freq="329.63">Mi</div>
+            <div class="white-key" data-note="Fa" data-freq="349.23">Fa</div>
+            <div class="white-key" data-note="Sol" data-freq="392.00">Sol</div>
+            <div class="white-key" data-note="La" data-freq="440.00">La</div>
+            <div class="white-key" data-note="Si" data-freq="493.88">Si</div>
+
+            <!-- Tecles Negres (Sostinguts i Bemolls neutres) -->
+            <div class="black-key bk-csharp" data-note="Do#" data-freq="277.18">Do#<small>Reb</small></div>
+            <div class="black-key bk-dsharp" data-note="Re#" data-freq="311.13">Re#<small>Mib</small></div>
+            <div class="black-key bk-fsharp" data-note="Fa#" data-freq="369.99">Fa#<small>Solb</small></div>
+            <div class="black-key bk-gsharp" data-note="Sol#" data-freq="415.30">Sol#<small>Lab</small></div>
+            <div class="black-key bk-asharp" data-note="La#" data-freq="466.16">La#<small>Sib</small></div>
+        </div>
+    </div>
+
+    <script>
+        // Relació d'equivalències per acceptar tant sostingut com bemoll al validar la resposta
+        const NOTE_EQUIVALENTS = {
+            "Do": ["Do"],
+            "Do#": ["Do#", "Reb"], "Reb": ["Do#", "Reb"],
+            "Re": ["Re"],
+            "Re#": ["Re#", "Mib"], "Mib": ["Re#", "Mib"],
+            "Mi": ["Mi"],
+            "Fa": ["Fa"],
+            "Fa#": ["Fa#", "Solb"], "Solb": ["Fa#", "Solb"],
+            "Sol": ["Sol"],
+            "Sol#": ["Sol#", "Lab"], "Lab": ["Sol#", "Lab"],
+            "La": ["La"],
+            "La#": ["La#", "Sib"], "Sib": ["La#", "Sib"],
+            "Si": ["Si"]
+        };
+
+        const CHROMATIC_BASE = ["Do", "Do#", "Re", "Re#", "Mi", "Fa", "Fa#", "Sol", "Sol#", "La", "La#", "Si"];
+        
+        // Noms per mostrar la tònica demanada
+        const DISPLAY_ROOTS = {
+            "Do": "Do", "Do#": "Do# / Reb", "Re": "Re", "Re#": "Re# / Mib",
+            "Mi": "Mi", "Fa": "Fa", "Fa#": "Fa# / Solb", "Sol": "Sol",
+            "Sol#": "Sol# / Lab", "La": "La", "La#": "La# / Sib", "Si": "Si"
+        };
+
+        const FORMULAS = {
+            major: [0, 2, 4, 5, 7, 9, 11],
+            minor: [0, 2, 3, 5, 7, 8, 10]
+        };
+
+        let currentScale = { root: "Do", type: "major", notes: [] };
+        let selectedNotes = []; // Emmagatzema les notes escollides
+        let filterMode = "all";
+        let isAnswered = false;
+        let stats = { streak: 0, score: 0, total: 0 };
+
+        let audioCtx = null;
+        function playNoteSound(freq) {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            } catch (e) {}
+        }
+
+        function generateNewScale() {
+            isAnswered = false;
+            selectedNotes = [];
+            
+            let type = filterMode;
+            if (filterMode === "all") {
+                type = Math.random() < 0.5 ? "major" : "minor";
+            }
+
+            let rootIndex;
+            do {
+                rootIndex = Math.floor(Math.random() * CHROMATIC_BASE.length);
+            } while (CHROMATIC_BASE[rootIndex] === currentScale.root && type === currentScale.type);
+
+            const root = CHROMATIC_BASE[rootIndex];
+            const notes = FORMULAS[type].map(interval => CHROMATIC_BASE[(rootIndex + interval) % 12]);
+
+            currentScale = { root, type, notes };
+
+            const typeText = type === "major" ? "Major" : "Menor";
+            document.getElementById("scale-prompt").innerHTML = `${DISPLAY_ROOTS[root]} <span>${typeText}</span>`;
+            document.getElementById("feedback-msg").textContent = "";
+            
+            document.getElementById("btn-check").style.display = "block";
+            document.getElementById("btn-clear").style.display = "block";
+            document.getElementById("btn-next").style.display = "none";
+
+            renderSlots();
+            updatePianoHighlights();
+        }
+
+        function renderSlots() {
+            const container = document.getElementById("slots-container");
+            container.innerHTML = "";
+
+            for (let i = 0; i < 7; i++) {
+                const slot = document.createElement("div");
+                slot.className = "note-slot";
+                
+                if (selectedNotes[i]) {
+                    slot.textContent = selectedNotes[i];
+                    slot.classList.add("filled");
+
+                    if (isAnswered) {
+                        // Validació d'equivalències enharmòniques
+                        const accepted = NOTE_EQUIVALENTS[currentScale.notes[i]] || [currentScale.notes[i]];
+                        if (accepted.includes(selectedNotes[i])) {
+                            slot.classList.add("correct");
+                        } else {
+                            slot.classList.add("wrong");
+                        }
+                    } else {
+                        // Clicar a sobre d'una nota ja posada l'esborra
+                        slot.onclick = () => {
+                            selectedNotes.splice(i, 1);
+                            renderSlots();
+                            updatePianoHighlights();
+                        };
+                    }
+                } else {
+                    slot.textContent = i + 1;
+                    slot.style.color = "rgba(255,255,255,0.2)";
+                    slot.style.fontSize = "0.8rem";
+                }
+                container.appendChild(slot);
+            }
+        }
+
+        function updatePianoHighlights() {
+            document.querySelectorAll(".white-key, .black-key").forEach(key => {
+                const note = key.dataset.note;
+                if (selectedNotes.includes(note)) {
+                    key.classList.add("selected-key");
+                } else {
+                    key.classList.remove("selected-key");
+                }
+            });
+        }
+
+        function handleKeyPress(note, freq) {
+            playNoteSound(freq);
+            if (isAnswered) return;
+
+            // Evitar duplicats o permetre desmarcar si ja estava seleccionada
+            const existingIndex = selectedNotes.indexOf(note);
+            if (existingIndex !== -1) {
+                selectedNotes.splice(existingIndex, 1);
+            } else {
+                // Comprovar si ja s'havia seleccionat una nota base equivalent (ex: evitar posar Re i Re# o Re i Reb alhora si es vol restringir, 
+                // o simplement vigilar que no superi 7 notes i no repeteixi nota exacta)
+                if (selectedNotes.length < 7) {
+                    selectedNotes.push(note);
+                }
+            }
+
+            renderSlots();
+            updatePianoHighlights();
+        }
+
+        function checkAnswer() {
+            if (selectedNotes.length < 7) {
+                const msg = document.getElementById("feedback-msg");
+                msg.style.color = "#FFD54F";
+                msg.textContent = `Falten ${7 - selectedNotes.length} notes per completar l'escala.`;
+                return;
+            }
+
+            isAnswered = true;
+            stats.total++;
+
+            const isCorrect = selectedNotes.every((note, idx) => {
+                const accepted = NOTE_EQUIVALENTS[currentScale.notes[idx]] || [currentScale.notes[idx]];
+                return accepted.includes(note);
+            });
+
+            const msg = document.getElementById("feedback-msg");
+
+            if (isCorrect) {
+                stats.score++;
+                stats.streak++;
+                msg.style.color = "var(--success)";
+                msg.textContent = "Molt bé! Escala correcta 🎉";
+            } else {
+                stats.streak = 0;
+                msg.style.color = "var(--error)";
+                msg.textContent = `Solució correcta: ${currentScale.notes.join(" - ")}`;
+            }
+
+            document.getElementById("streak").textContent = stats.streak;
+            document.getElementById("score").textContent = stats.score;
+            document.getElementById("total").textContent = stats.total;
+
+            document.getElementById("btn-check").style.display = "none";
+            document.getElementById("btn-clear").style.display = "none";
+            document.getElementById("btn-next").style.display = "block";
+
+            renderSlots();
+        }
+
+        document.querySelectorAll(".white-key, .black-key").forEach(key => {
+            const trigger = (e) => {
+                e.preventDefault();
+                key.classList.add("pressed");
+                setTimeout(() => key.classList.remove("pressed"), 120);
+                handleKeyPress(key.dataset.note, parseFloat(key.dataset.freq));
+            };
+            key.addEventListener("touchstart", trigger, { passive: false });
+            key.addEventListener("mousedown", trigger);
+        });
+
+        document.getElementById("btn-clear").addEventListener("click", () => {
+            if (isAnswered) return;
+            selectedNotes = [];
+            document.getElementById("feedback-msg").textContent = "";
+            renderSlots();
+            updatePianoHighlights();
+        });
+
+        document.getElementById("btn-check").addEventListener("click", checkAnswer);
+        document.getElementById("btn-next").addEventListener("click", generateNewScale);
+
+        document.querySelectorAll(".mode-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                filterMode = btn.dataset.mode;
+                generateNewScale();
+            });
+        });
+
+        generateNewScale();
+    </script>
+</body>
+</html>
